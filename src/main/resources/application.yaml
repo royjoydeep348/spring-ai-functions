@@ -3,11 +3,16 @@ spring:
     name: spring-ai-functions
   #Pass API key as environment variable, e.g. -DOPENAI_API_KEY=your-api-key
   ai:
-    openai:
-      api-key: ${OPENAI_API_KEY}
+#    openai:
+#      api-key: ${OPENAI_API_KEY}
+#      chat:
+#        options:
+#          model: gpt-3.5-turbo
+    mistralai:
+      api-key:
       chat:
         options:
-          model: gpt-3.5-turbo
+          model: mistral-small-latest
 sfg:
   aiapp:
-    apiNinjasKey: ${API_NINJAS_KEY}
+    apiNinjasKey:

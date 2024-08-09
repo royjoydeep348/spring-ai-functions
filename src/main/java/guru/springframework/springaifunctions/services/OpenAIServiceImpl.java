@@ -9,8 +9,10 @@ import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.model.function.FunctionCallbackWrapper;
-import org.springframework.ai.openai.OpenAiChatClient;
-import org.springframework.ai.openai.OpenAiChatOptions;
+
+import org.springframework.ai.mistralai.MistralAiChatClient;
+
+import org.springframework.ai.mistralai.MistralAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +28,19 @@ public class OpenAIServiceImpl implements OpenAIService {
     @Value("${sfg.aiapp.apiNinjasKey}")
     private String apiNinjasKey;
 
-    final OpenAiChatClient openAiChatClient;
+    //final OpenAiChatClient openAiChatClient;
+    final MistralAiChatClient mistralAiChatClient;
+
 
     @Override
     public Answer getAnswer(Question question) {
-        var promptOptions = OpenAiChatOptions.builder()
+//        var promptOptions = OpenAiChatOptions.builder()
+//                .withFunctionCallbacks(List.of(FunctionCallbackWrapper.builder(new WeatherServiceFunction(apiNinjasKey))
+//                        .withName("CurrentWeather")
+//                        .withDescription("Get the current weather for a location")
+//                        .build()))
+//                .build();
+        var promptOptions = MistralAiChatOptions.builder()
                 .withFunctionCallbacks(List.of(FunctionCallbackWrapper.builder(new WeatherServiceFunction(apiNinjasKey))
                         .withName("CurrentWeather")
                         .withDescription("Get the current weather for a location")
@@ -39,10 +49,12 @@ public class OpenAIServiceImpl implements OpenAIService {
 
         Message userMessage = new PromptTemplate(question.question()).createMessage();
 
-        var response = openAiChatClient.call(new Prompt(List.of(userMessage), promptOptions));
+        var response = mistralAiChatClient.call(new Prompt(List.of(userMessage), promptOptions));
 
         return new Answer(response.getResult().getOutput().getContent());
     }
+
+
 }
 
 
